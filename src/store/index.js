@@ -1,5 +1,5 @@
-import {createApp} from 'vue'
+import Vue from 'vue'
 
-const states = {
+export const store = {
 
 }

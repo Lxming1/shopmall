@@ -1,7 +1,7 @@
 <template>
-<div>
+<div class="tabbar">
   <tab-bar>
-    <tab-bar-item path="/Home" activeColor="red">
+    <tab-bar-item path="/Home" activeColor="red" @click="homeclick">
       <img slot="picture" src="~assets/img/tabbar/home.svg" alt="">
       <img slot="picture_active" src="~assets/img/tabbar/home_active.svg" alt="">
       <div slot="text">首页</div>
@@ -22,7 +22,6 @@
       <div slot="text">我的</div>
     </tab-bar-item>
   </tab-bar>
-  <router-view></router-view>
 </div>
 </template>
 
@@ -34,10 +33,17 @@ export default {
   components:{
     tabBar,
     tabBarItem
+  },
+  methods:{
+    homeclick(){
+      this.$bus.$emit('homeclick')
+    }
   }
 }
 </script>
 
 <style scoped>
-
+.tabbar{
+  z-index: 9
+}
 </style>

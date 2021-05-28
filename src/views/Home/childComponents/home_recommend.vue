@@ -28,16 +28,16 @@ export default {
   display: flex;
   width: 100%;
   text-align: center;
-  margin: 15px 0 25px;
+  margin: 15px 0 0;
   border-bottom: 10px solid #eee;
   font-size: 14px;
 }
 .recommenditem{
   flex: 1;
-  padding-bottom: 30px;
+  padding-bottom: 20px;
 }
 img{
   width: 80px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 </style>

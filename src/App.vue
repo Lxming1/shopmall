@@ -1,6 +1,9 @@
 <template>
   <div id="app">
-    <maintabbar/>
+    <keep-alive exclude="detail">
+      <router-view/>
+    </keep-alive>
+    <maintabbar v-show="$route.path.indexOf('/detail') === -1"/>
   </div>
 </template>
 
