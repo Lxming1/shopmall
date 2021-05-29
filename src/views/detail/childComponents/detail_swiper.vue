@@ -2,7 +2,7 @@
 <div>
   <Swiper class="detailSwiper">
     <SwiperItem v-for="item in detailSwiper" class="detailSwiperItem">
-      <img :src="item" alt="">
+      <img :src="item" alt="" @load="detailLoad">
     </SwiperItem>
   </Swiper>
 </div>
@@ -17,11 +17,24 @@ export default {
     Swiper,
     SwiperItem
   },
+  data(){
+    return {
+      isLoad: false
+    }
+  },
   props:{
     detailSwiper:{
       type: Array,
       default(){
         return []
+      }
+    }
+  },
+  methods:{
+    detailLoad(){
+      if(!this.isLoad){
+        this.$emit('detailLoad')
+        this.isLoad = true
       }
     }
   }

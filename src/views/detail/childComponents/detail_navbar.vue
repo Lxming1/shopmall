@@ -1,6 +1,6 @@
 <template>
   <div>
-    <navbar class="detail_navbar">
+    <navbar class="detail_navbar" >
       <div class="back" slot="left" @click="back">
         <img class="backImg" src="@/assets/img/common/back.svg" alt="">
       </div>
@@ -30,6 +30,7 @@ export default {
   methods:{
     optionsClick(index){
       this.currentIndex = index
+      this.$emit('navbarClick', this.currentIndex)
     },
     back(){
       this.$router.back()

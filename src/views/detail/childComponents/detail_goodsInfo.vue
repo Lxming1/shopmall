@@ -4,16 +4,16 @@
     <div class="start1"></div>
     <div class="recommend">{{detailInfo.desc}}</div>
     <div class="start2"></div>
-    <div class='detail-title'>
+    <div class='detail-title' v-if="detailInfo.detailImage !== undefined  &&  detailInfo.detailImage.length > 0">
       {{detailInfo.detailImage[0].key}}
     </div>
   </div>
-  <div class="mainDetail">
+  <div class="mainDetail" v-if="detailInfo.detailImage !== undefined  &&  detailInfo.detailImage.length > 0">
     <img :src="item"
          alt=""
          v-for="item in detailInfo.detailImage[0].list"
          style="width: 100%;"
-         @load="imgLoad" v-if="detailInfo.detailImage[0]">
+         @load="imgLoad">
   </div>
 </div>
 </template>
@@ -31,7 +31,7 @@ export default {
   },
   methods:{
     imgLoad(){
-      this.$emit('imgLoad')
+      this.$bus.$emit('imgLoad')
     }
   }
 }

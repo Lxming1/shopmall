@@ -1,115 +1,15 @@
 <template>
 <div v-if="">
-  <detail-navbar />
+  <detail-navbar @navbarClick="navbarClick" ref="detnav"/>
   <bscroll class="detailContent"
            :probe="3"
-           :pullUpLoad="true" ref="detailScroll">
-    <detail-swiper :detailSwiper="swiperImg"></detail-swiper>
+           :pullUpLoad="true"
+           ref="detailScroll"
+           @isShow="isShow">
+    <detail-swiper :detailSwiper="swiperImg" @detailLoad="detailLoad"/>
     <detail-base-info :Goods="goods"/>
     <detail-shop-mes :Shop="shop"/>
-    <detail-goods-info :detailInfo="detailInfo" @imgLoad="imgLoad"/>
-    <ul>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-    </ul>
+    <detail-goods-info :detailInfo="detailInfo" ref="goodsDetail"/>
   </bscroll>
 </div>
 </template>
@@ -117,6 +17,7 @@
 <script>
 import DetailNavbar from './childComponents/detail_navbar'
 import {getDetailMes, Goods, Shop} from 'network/detail'
+import {debounce} from 'common/utils'
 import DetailSwiper from './childComponents/detail_swiper'
 import DetailBaseInfo from './childComponents/detail_baseInfo'
 import bscroll from 'components/common/bscroll/bscroll'
@@ -139,7 +40,8 @@ export default {
       swiperImg: [],
       goods: {},
       shop: {},
-      detailInfo: {}
+      detailInfo: {},
+      shopHeight: 0
     }
   },
   created() {
@@ -158,9 +60,33 @@ export default {
       console.log(this.detailInfo)
     })
   },
+  mounted() {
+    const refresh = debounce(this.$refs.detailScroll.refresh, 50)
+    this.$bus.$on('imgLoad', ()=>{
+      refresh()
+    })
+  },
   methods:{
-    imgLoad(){
-      this.$refs.detailScroll.refresh()
+    navbarClick(index){
+      switch (index){
+        case 0:
+          this.$refs.detailScroll.scrollTo(0,0,100)
+          break
+        case 1:
+          this.$refs.detailScroll.refresh()
+          this.$refs.detailScroll.scrollTo(0,-this.shopHeight,100)
+      }
+    },
+    detailLoad(){
+      this.shopHeight += this.$refs.goodsDetail.$el.offsetTop -19
+    },
+    isShow(pos){
+      if(-pos.y < this.shopHeight){
+        this.$refs.detnav.currentIndex = 0
+      }
+      else if(-pos.y >= this.shopHeight){
+        this.$refs.detnav.currentIndex = 1
+      }
     }
   }
 }
