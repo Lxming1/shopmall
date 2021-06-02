@@ -1,19 +1,26 @@
 <template>
-<div class="detail-main">
+<div class="detail-main" v-if="Object.keys(detailInfo).length !== 0">
   <div class="top">
     <div class="start1"></div>
     <div class="recommend">{{detailInfo.desc}}</div>
     <div class="start2"></div>
-    <div class='detail-title' v-if="detailInfo.detailImage !== undefined  &&  detailInfo.detailImage.length > 0">
-      {{detailInfo.detailImage[0].key}}
-    </div>
   </div>
-  <div class="mainDetail" v-if="detailInfo.detailImage !== undefined  &&  detailInfo.detailImage.length > 0">
-    <img :src="item"
-         alt=""
-         v-for="item in detailInfo.detailImage[0].list"
-         style="width: 100%;"
-         @load="imgLoad">
+  <div class="mainDetail"
+       v-for="item1 in detailInfo.detailImage"
+       v-if="detailInfo.detailImage !== undefined  &&  detailInfo.detailImage.length !== 0">
+    <div v-if="item1.key !== undefined" class='detail-title'>
+      <span>{{item1.key}}</span>
+    </div>
+    <div v-if="item1.desc !== undefined" class='detail-title-item'>
+      {{item1.desc}}
+    </div>
+    <div v-if="item1.list !== undefined">
+      <img :src="item"
+           alt=""
+           v-for="item in getImg(item1,15)"
+           style="width: 100%;"
+           @load="detailLoad">
+    </div>
   </div>
 </div>
 </template>
@@ -29,9 +36,23 @@ export default {
       }
     }
   },
-  methods:{
-    imgLoad(){
-      this.$bus.$emit('imgLoad')
+  methods: {
+    getIndex(arr, n) {
+      for (let i in arr) {
+        if (arr[i] === n) {
+          return i
+        }
+      }
+    },
+    getImg(item, count) {
+      const arr = item.list.filter(n => this.getIndex(item.list, n) < count)
+      if(arr.length < item.list.length){
+        arr.push(item.list[item.list.length-1])
+      }
+      return arr
+    },
+    detailLoad(){
+      this.$emit('detailLoad')
     }
   }
 }
@@ -39,7 +60,9 @@ export default {
 
 <style scoped>
 .detail-main{
-  margin-top: 20px;
+  padding-top: 20px;
+  margin-bottom: 20px;
+  border-top: 5px solid #f2f5f8;
 }
 .top{
   padding: 0 15px;
@@ -52,15 +75,16 @@ export default {
 .start1{
   width: 90px;
   height: 1px;
-  background-color: #a3a3a5;
+  background-color: #9c9c9c;
   position: relative;
 }
 .start2{
   width: 90px;
   height: 1px;
-  background-color: #a3a3a5;
+  background-color: #9c9c9c;
   position: relative;
   right: -240px;
+  margin-bottom: 20px;
 }
 .start1::before{
   content: '';
@@ -80,6 +104,17 @@ export default {
   top: -2.5px;
 }
 .detail-title{
+  color: #fd5778;
+  font-weight: bold;
+  text-align: center;
+  padding: 5px;
+  border-radius: 25px;
+  border: 3px solid #fd5778;
+}
+.detail-title-item{
+  padding: 0 15px;
+  font-size: 10px;
   margin: 10px 0;
+  color: #868686;
 }
 </style>

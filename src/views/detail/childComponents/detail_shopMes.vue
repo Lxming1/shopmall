@@ -82,8 +82,7 @@ export default {
 
 <style scoped>
 .shopMes{
-  border-top: 4px solid #f1f1f1;
-  border-bottom: 4px solid #F1F1F1;
+  border-top: 5px solid #f2f5f8;
 }
 .shopname{
   margin-top: 25px;

@@ -2,7 +2,7 @@
 <div>
   <Swiper class="detailSwiper">
     <SwiperItem v-for="item in detailSwiper" class="detailSwiperItem">
-      <img :src="item" alt="" @load="detailLoad">
+      <img :src="item" alt="" @load="imgLoad">
     </SwiperItem>
   </Swiper>
 </div>
@@ -31,9 +31,9 @@ export default {
     }
   },
   methods:{
-    detailLoad(){
+    imgLoad(){
       if(!this.isLoad){
-        this.$emit('detailLoad')
+        this.$bus.$emit('swiperLoad')
         this.isLoad = true
       }
     }
