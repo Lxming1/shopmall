@@ -9,6 +9,12 @@ export function getDetailMes(iid){
 	})
 }
 
+export function getRecommendMes(){
+	return request({
+		url: '/recommend'
+	})
+}
+
 export class Goods {
 	constructor(Info) {
 		this.swiperImg = Info.itemInfo.topImages
@@ -20,6 +26,7 @@ export class Goods {
 		this.discountDesc = Info.itemInfo.discountDesc
 		this.columns = Info.columns
 		this.services = Info.shopInfo.services
+		this.desc = Info.itemInfo.desc
 	}
 }
 export class Shop{

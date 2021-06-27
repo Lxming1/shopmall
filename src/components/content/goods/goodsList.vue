@@ -1,15 +1,15 @@
 <template>
-<div class="goods">
-  <goods-list-item v-for="item in goods" :goodsItem="item"/>
-</div>
+  <div class="goods">
+    <goods-list-item v-for="(item,index) in goods" :key="index" :goodsItem="item"/>
+  </div>
 </template>
 
 <script>
-import goodsListItem from './goodsListItem'
+import GoodsListItem from './goodsListItem'
 export default {
   name: "goodList",
   components:{
-    goodsListItem
+    GoodsListItem
   },
   props:{
     goods:{
@@ -24,6 +24,7 @@ export default {
 
 <style scoped>
 .goods{
+  background-color: #f1eeef;
   display: flex;
   flex-wrap: wrap;  /* 平分子类 */
   justify-content: space-around;   /* 平分后均等分 */

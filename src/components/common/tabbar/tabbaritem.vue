@@ -44,6 +44,6 @@ export default {
 img{
   height: 24px;
   vertical-align: middle;
-  margin-top: 4px;
+  margin-top: 6px;
 }
 </style>

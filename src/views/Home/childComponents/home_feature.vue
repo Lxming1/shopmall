@@ -1,14 +1,15 @@
 <template>
-  <div class="feature">
-    <a href="https://act.mogujie.com/zzlx67">
-      <img src="~assets/img/home/recommend_bg.jpg" alt="">
-    </a>
+  <div class="feature" @click="notMes">
+    <img src="~assets/img/home/recommend_bg.jpg" alt="">
   </div>
 </template>
 
 <script>
+import {notMes} from 'common/mixin'
+
 export default {
-  name: "home_feature"
+  name: "home_feature",
+  mixins: [notMes]
 }
 </script>
 

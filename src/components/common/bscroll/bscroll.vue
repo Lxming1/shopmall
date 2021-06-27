@@ -29,15 +29,22 @@ export default {
   },
   mounted() {
     let options = {
+      observeDOM: true,
       //监听positions，0/1时不监听，2监听手在触摸屏幕时的位置，3监听所有位置
       probeType: this.probe,
       //是否允许上拉加载更多
       pullUpLoad: this.pullUpLoad,
       //是否允许div被点击
       click: true,
-      disableTouch: false//启用手指触摸
+      //启用手指触摸
+      observeImage: true,
+      //开启鼠标滚轮
+      mouseWheel: true,
+      //启用鼠标拖动
+      disableMouse: false,
+      //启用手指触摸
+      disableTouch: false
     }
-
     this.bscroll = new BScroll(this.$refs.wrapper, options)
 
     //发出上拉加载事件
@@ -60,6 +67,7 @@ export default {
     },
     refresh(){
       this.bscroll && this.bscroll.refresh()
+      // console.log('---')
     },
     finishPullUp(){
       this.bscroll && this.bscroll.finishPullUp()

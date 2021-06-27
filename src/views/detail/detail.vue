@@ -1,28 +1,32 @@
 <template>
-<div v-if="">
-  <detail-navbar @navbarClick="navbarClick" ref="detnav"/>
-  <bscroll class="detailContent"
-           :probe="3"
-           :pullUpLoad="true"
-           ref="detailScroll"
-           @isShow="isShow">
-    <detail-swiper :detailSwiper="swiperImg"/>
-    <detail-base-info :Goods="goods"/>
-    <detail-comment :commentInfo="commentInfo" :commentCount="commentCount" ref="comment"/>
-    <detail-shop-mes :Shop="shop"/>
-    <detail-goods-info :detailInfo="detailInfo" @detailLoad="detailLoad" ref="goodsDetail"/>
-    <detail-item-params :itemParams="itemParams"/>
-    <detail-goods-recommend/>
-<!--    <backtop/>-->
-  </bscroll>
-</div>
+  <div id="detail">
+    <detail-navbar @navbarClick="navbarClick" ref="detnav"/>
+    <bscroll class="detailContent"
+             :probe="3"
+             ref="scroll"
+             @isShow="isShow">
+      <detail-swiper :detailSwiper="swiperImg" @bigImg="bigImg"/>
+      <detail-base-info :Goods="goodsInfo"/>
+      <detail-comment :commentInfo="commentInfo" :commentCount="commentCount" ref="comment" @bigImg="bigImg"/>
+      <detail-shop-mes :Shop="shop"/>
+      <detail-goods-info :detailInfo="detailInfo" ref="goodsDetail" @detailLoad="detailLoad"/>
+      <detail-item-params :itemParams="itemParams"/>
+      <detail-goods-list :goodsRecommends="goodsRecommends" ref="goodsList"/>
+    </bscroll>
+    <backtop v-show="showT" @click.native="backClick"/>
+    <detail-bottom-bar @addToCart="addToCart"/>
+    <div class="showImg" v-show="showimg" @click="noShow">
+      <img :src="commentImg" alt="">
+    </div>
+  </div>
 </template>
 
 <script>
 import bscroll from 'components/common/bscroll/bscroll'
-import backtop from '../../components/content/backtop/backtop'
-import {getDetailMes, Goods, Shop} from 'network/detail'
+import {getDetailMes, getRecommendMes, Goods, Shop} from 'network/detail'
 import {debounce} from 'common/utils'
+import {mapActions} from 'vuex'
+import {backTop} from 'common/mixin'
 
 import DetailNavbar from './childComponents/detail_navbar'
 import DetailSwiper from './childComponents/detail_swiper'
@@ -31,13 +35,14 @@ import DetailShopMes from './childComponents/detail_shopMes'
 import DetailGoodsInfo from './childComponents/detail_goodsInfo'
 import DetailItemParams from './childComponents/detail_itemParams'
 import DetailComment from './childComponents/detail_comment'
-import DetailGoodsRecommend from './childComponents/detail_goodsInfo'
+import DetailGoodsList from './childComponents/detail_goods'
+import DetailBottomBar from './childComponents/detail_bottomBar'
 
 export default {
   name: "detail",
+  mixins:[backTop],
   components:{
     bscroll,
-    backtop,
     DetailNavbar,
     DetailSwiper,
     DetailBaseInfo,
@@ -45,21 +50,27 @@ export default {
     DetailShopMes,
     DetailGoodsInfo,
     DetailItemParams,
-    DetailGoodsRecommend
+    DetailGoodsList,
+    DetailBottomBar
   },
   data(){
     return {
       iid: null,    //该页面的id
       swiperImg: [],    //轮播图信息
-      goods: {},    //最上面的基本信息
+      goodsInfo: {},    //最上面的基本信息
       shop: {},    //商家信息
       detailInfo: {},   //详情
       itemParams: {},   //参数
       commentInfo: {},    //评论
-      goodsRecommend: {},   //推荐
+      goodsRecommends: [],   //推荐
       commentCount: 0,
       mesHeight: 0,
       commentHeight: 0,
+      goodsListHeight: 0,
+      showT:false,
+      showimg: false,
+      commentImg: null,
+      isClick: true
     }
   },
   created() {
@@ -67,9 +78,9 @@ export default {
     this.iid = this.$route.params.id
     getDetailMes(this.iid).then(res => {
       //请求基础信息数据
-      this.goods = new Goods(res.result)
+      this.goodsInfo = new Goods(res.result)
       //请求轮播图图片
-      this.swiperImg = this.goods.swiperImg
+      this.swiperImg = this.goodsInfo.swiperImg
       //请求商家数据
       this.shop = new Shop(res.result)
       //请求详情数据
@@ -83,44 +94,84 @@ export default {
       }else {
         this.commentInfo = {}
       }
-      console.log(this.commentInfo)
+    }).catch(e =>{
+      this.$toast.show('该商品已下架')
+    })
+    getRecommendMes().then(res =>{
+      this.goodsRecommends = res.data.list
     })
   },
   mounted() {
     this.$bus.$on('swiperLoad', ()=>{
-      if(this.$refs.goodsDetail !== undefined){
+      if(this.$refs.goodsDetail !== undefined && this.$refs.comment !== undefined){
         this.mesHeight = this.$refs.goodsDetail.$el.offsetTop
         this.commentHeight = this.$refs.comment.$el.offsetTop
       }
     })
   },
   methods:{
+    ...mapActions(['addCart']),
     navbarClick(index){
       switch (index) {
         case 0:
-          this.$refs.detailScroll.scrollTo(0, 0, 100)
+          this.$refs.scroll.scrollTo(0, 0, 100)
           break
         case 1:
-          this.$refs.detailScroll.scrollTo(0, -this.commentHeight, 100)
+          this.$refs.scroll.scrollTo(0, -this.commentHeight, 100)
           break
         case 2:
-          this.$refs.detailScroll.scrollTo(0, -this.mesHeight, 100)
+          this.$refs.scroll.scrollTo(0, -this.mesHeight, 100)
           break
         case 3:
+          this.$refs.scroll.scrollTo(0, -this.goodsListHeight, 100)
       }
     },
     isShow(pos){
+      this.showT = pos.y < -1000
       if(-pos.y < this.commentHeight){
         this.$refs.detnav.currentIndex = 0
       }else if(-pos.y >= this.commentHeight && -pos.y < this.mesHeight){
         this.$refs.detnav.currentIndex = 1
-      }else if(-pos.y >= this.mesHeight){
+      }else if(-pos.y >= this.mesHeight && -pos.y < this.goodsListHeight){
         this.$refs.detnav.currentIndex = 2
+      }else{
+        this.$refs.detnav.currentIndex = 3
       }
     },
     detailLoad(){
-      const refresh = debounce(this.$refs.detailScroll.refresh, 100)
+      const refresh = debounce(this.$refs.scroll.refresh, 10)
       refresh()
+      if(this.$refs.goodsList !== undefined){
+        this.goodsListHeight = this.$refs.goodsList.$el.offsetTop
+      }
+    },
+    addToCart(){
+      const product = {}
+      product.image = this.swiperImg[0]
+      product.title = this.goodsInfo.title
+      product.desc = this.goodsInfo.desc
+      product.price = this.goodsInfo.realPrice
+      product.id = this.iid
+      if(product.price){
+        if(this.isClick){
+          this.isClick = false
+          this.addCart(product).then(res =>{
+            this.$toast.show(res, 1500)
+            this.$bus.$emit('addItem')
+            console.log(res)
+            setTimeout(()=>{
+              this.isClick = true
+            }, 1000)
+          })
+        }
+      }
+    },
+    bigImg(item){
+      this.showimg = true
+      this.commentImg = item
+    },
+    noShow(){
+      this.showimg = false
     }
   }
 }
@@ -129,11 +180,25 @@ export default {
 <style scoped>
 .detailContent{
   overflow: hidden;
-  /*height: calc(100% - 59px);*/
   position: absolute;
   top: 44px;
-  bottom: 0;
+  bottom: 50px;
   left: 0;
   right: 0;
+}
+.showImg{
+  position: fixed;
+  display: flex;
+  align-items: center;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 20;
+  /*background-color: rgba(241, 241, 241, 0.4);*/
+  background-color: black;
+}
+.showImg img{
+  width: 100%;
 }
 </style>

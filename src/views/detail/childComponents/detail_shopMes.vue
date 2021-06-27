@@ -2,11 +2,9 @@
 <div v-if="Object.keys(Shop).length !== 0" class="shopMes">
   <div class="shopname">
     <div class="logo">
-      <a :href="Shop.url"><img :src="Shop.logo" alt=""></a>
+      <img :src="Shop.logo" alt="" @click="notMes">
     </div>
-    <a :href="Shop.url">
-      <span class="shopName">{{Shop.name}}</span>
-    </a>
+    <span class="shopName" @click="notMes">{{Shop.name}}</span>
     <span class="fanc">粉丝:{{getRealSells(Shop.fans)}}</span>
   </div>
   <div class="midShop">
@@ -14,11 +12,11 @@
       <div class="midLeftItem">
         <span>
           <span>{{getRealSells(Shop.sells)}}</span>
-          <span style="font-size: 10px; margin-top: 8px;">总销量</span>
+          <span class="small">总销量</span>
         </span>
         <span>
           <span>{{Shop.goodsCount}}</span>
-          <span style="font-size: 10px; margin-top: 8px;">全部宝贝</span>
+          <span class="small">全部宝贝</span>
         </span>
       </div>
     </div>
@@ -36,16 +34,17 @@
     </div>
   </div>
   <div class="buttondiv">
-    <a :href="Shop.url">
-      <button class="button">进店逛逛</button>
-    </a>
+    <button class="button" @click="notMes">进店逛逛</button>
   </div>
 </div>
 </template>
 
 <script>
+import {notMes} from 'common/mixin'
+
 export default {
   name: "detail_shopMes",
+  mixins: [notMes],
   props:{
     Shop: {
       type: Object,
@@ -108,6 +107,7 @@ export default {
   font-size: 18px;
   position: relative;
   top: -7px;
+  z-index: 1;
 }
 .fanc{
   color: black;
@@ -135,6 +135,10 @@ export default {
   display: flex;
   justify-content: space-evenly;
   border-right: 1px solid #d2d2d2;
+}
+.small{
+  font-size: 10px;
+  margin-top: 8px;
 }
 .midLeftItem span span{
   display: block;

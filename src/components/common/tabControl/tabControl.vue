@@ -11,7 +11,7 @@ export default {
   name: "tabControl",
   data(){
     return {
-      isIndex:0
+      isIndex: 0
     }
   },
   props:{

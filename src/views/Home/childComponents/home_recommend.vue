@@ -1,17 +1,18 @@
 <template>
-<div class="recommend">
-  <div class="recommenditem" v-for="item in recommend">
-    <a :href="item.link">
-      <img :src="item.image" alt="">
-      <div>{{item.title}}</div>
-    </a>
+<div id="recommend">
+  <div class="recommenditem" v-for="item in recommend" @click="notMes">
+    <img :src="item.image" alt="">
+    <div>{{item.title}}</div>
   </div>
 </div>
 </template>
 
 <script>
+import {notMes} from 'common/mixin'
+
 export default {
   name: "home_recommend",
+  mixins: [notMes],
   props:{
     recommend:{
       type: Array,
@@ -19,18 +20,24 @@ export default {
         return []
       }
     }
+  },
+  methods:{
+    reClick(){
+      this.$toast.show('无数据', 1000)
+    }
   }
 }
 </script>
 
 <style scoped>
-.recommend{
+#recommend{
   display: flex;
   width: 100%;
   text-align: center;
-  margin: 15px 0 0;
+  padding: 15px 0 0;
   border-bottom: 10px solid #eee;
   font-size: 14px;
+  background-color: white;
 }
 .recommenditem{
   flex: 1;

@@ -2,10 +2,10 @@
 <div class="comment">
   <div class="tittle-top">
     <div>
-      <span style="font-size: 15px">用户评价({{this.commentCount}})</span>
+      <span class="userComment">用户评价({{this.commentCount}})</span>
     </div>
     <div class="tittle-right">
-      <span style="font-size: 13px">更多</span>
+      <span class="more" @click="notMes">更多</span>
       <img src="~assets/img/common/back.svg" alt="">
     </div>
   </div>
@@ -18,17 +18,20 @@
     <img slot="commentImage"
          :src="item"
          alt=""
-         v-for="item in this.commentInfo.images">
+         v-for="item in this.commentInfo.images"
+         @click="imgClick(item)">
   </comment>
 </div>
 </template>
 
 <script>
 import {formatDate} from 'common/utils'
+import {notMes} from 'common/mixin'
 import comment from 'components/common/comment/comment'
 
 export default {
   name: "detail_common",
+  mixins: [notMes],
   components:{
     comment
   },
@@ -54,6 +57,11 @@ export default {
       let date = new Date(value*1000);
       return formatDate(date, 'yyyy-MM-dd')
     }
+  },
+  methods:{
+    imgClick(item){
+      this.$emit('bigImg', item)
+    }
   }
 }
 </script>
@@ -69,18 +77,25 @@ export default {
   border-bottom: 1px solid rgba(0,0,0,.1);
   padding: 15px 0;
 }
+.userComment{
+  font-size: 15px;
+}
+.more{
+  font-size: 13px;
+}
 .tittle-right{
-  position: relative;
+  display: flex;
+  align-items: center;
+  height: 15px;
 }
 .tittle-right span{
-  margin-right: 25px;
+  margin-right: 2px;
 }
 .tittle-right img{
-  width: 14.4px;
-  height: 14.4px;
+  width: 15px;
+  height: 15px;
   transform: rotate(180deg);
-  position: absolute;
-  top: 3px;
-  left: 30px;
+  margin-right: 5px;
+  padding-top: 3px;
 }
 </style>

@@ -73,7 +73,7 @@ export default {
 .content-bottom{
   color: #999;
   font-size: 12px;
-  padding: 5px 4px 10px 4px;
+  padding: 8px 4px 10px 4px;
 }
 .time{
   display: inline-block;
@@ -84,7 +84,7 @@ export default {
 }
 .commentImage{
   display: flex;
-  margin-top: 11px;
+  margin-top: 15px;
   height: 70px;
 }
 .commentImage img{

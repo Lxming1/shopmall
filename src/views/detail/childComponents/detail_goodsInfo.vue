@@ -7,14 +7,16 @@
   </div>
   <div class="mainDetail"
        v-for="item1 in detailInfo.detailImage"
-       v-if="detailInfo.detailImage !== undefined  &&  detailInfo.detailImage.length !== 0">
-    <div v-if="item1.key !== undefined" class='detail-title'>
+       v-if="detailInfo.detailImage && detailInfo.detailImage.length !== 0">
+    <div v-if="item1.key" class='detail-title'>
+      <div class="start11"/>
       <span>{{item1.key}}</span>
+      <div class="start22"/>
     </div>
-    <div v-if="item1.desc !== undefined" class='detail-title-item'>
+    <div v-if="item1.desc" class='detail-title-item'>
       {{item1.desc}}
     </div>
-    <div v-if="item1.list !== undefined">
+    <div v-if="item1.list">
       <img :src="item"
            alt=""
            v-for="item in getImg(item1,15)"
@@ -44,8 +46,10 @@ export default {
         }
       }
     },
+    //显示固定数量的详情图
     getImg(item, count) {
       const arr = item.list.filter(n => this.getIndex(item.list, n) < count)
+      //如果arr的数量小于item.list的数量，则将item.list最后一张图片加上去
       if(arr.length < item.list.length){
         arr.push(item.list[item.list.length-1])
       }
@@ -104,12 +108,32 @@ export default {
   top: -2.5px;
 }
 .detail-title{
+  font-size: 16px;
   color: #fd5778;
   font-weight: bold;
   text-align: center;
   padding: 5px;
-  border-radius: 25px;
-  border: 3px solid #fd5778;
+  /*border-radius: 25px;*/
+  border-bottom: 2px solid #fd5778;
+  border-top: 2px solid #fd5778;
+  position: relative;
+  margin-bottom: 10px;
+}
+.start11{
+  width: 20px;
+  height: 1px;
+  background-color: #fd5778;
+  position: absolute;
+  left: 105px;
+  top: 12px;
+}
+.start22{
+  width: 20px;
+  height: 1px;
+  background-color: #fd5778;
+  position: absolute;
+  top: 12px;
+  right: 105px;
 }
 .detail-title-item{
   padding: 0 15px;
@@ -117,4 +141,5 @@ export default {
   margin: 10px 0;
   color: #868686;
 }
+
 </style>

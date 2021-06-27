@@ -54,6 +54,8 @@ export default {
   position: absolute;
   left: 22px;
   top: 11px;
+  height: 22px;
+  width: 22px;
 }
 .options{
   font-size: 14px;

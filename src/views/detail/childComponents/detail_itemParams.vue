@@ -1,10 +1,12 @@
 <template>
 <div v-if="Object.keys(itemParams).length !== 0" class="itemParams">
-  <table v-for="item1 in itemParams.rule.tables[0]" class="params-top tab1">
-    <tr>
-      <td v-for="item2 in item1" >{{item2}}</td>
-    </tr>
-  </table>
+  <div v-if="itemParams.rule">
+    <table v-for="item1 in itemParams.rule.tables[0]" class="params-top tab1">
+      <tr>
+        <td v-for="item2 in item1" >{{item2}}</td>
+      </tr>
+    </table>
+  </div>
   <table class="params-top tab2">
     <tr v-for="item1 in itemParams.info.set">
       <td style="width: 95px;">{{item1.key}}</td>

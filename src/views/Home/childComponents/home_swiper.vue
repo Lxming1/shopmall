@@ -1,6 +1,6 @@
 <template>
 <div>
-  <swiper>
+  <swiper ref="swiper">
     <swiper-item v-for="item in banners">
       <a :href="item.link">
         <img :src="item.image" alt="" @load="imageload">
@@ -24,26 +24,20 @@ export default {
       }
     }
   },
-  data(){
-    return {
-      isLoad: false
-    }
-  },
   components: {
     Swiper,
     SwiperItem
   },
   methods:{
     imageload(){
-      if(!this.isLoad){
-        this.$emit('imageload')
-        this.isLoad = true
-      }
+      this.$emit('imageload')
     }
   }
 }
 </script>
 
 <style scoped>
-
+img{
+  display: block;
+}
 </style>
