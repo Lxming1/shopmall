@@ -27,7 +27,7 @@
 <script>
 import {formatDate} from 'common/utils'
 import {notMes} from 'common/mixin'
-import comment from 'components/common/comment/comment'
+import comment from 'components/common/common/common'
 
 export default {
   name: "detail_common",

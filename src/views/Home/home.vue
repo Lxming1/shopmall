@@ -37,7 +37,7 @@ import swiper from './childComponents/home_swiper'
 import recommend from './childComponents/home_recommend'
 import feature from './childComponents/home_feature'
 import tabControl from 'components/common/tabControl/tabControl'
-import goodsList from 'components/content/goods/goodsList'
+import goodsList from 'components/content/goodsList/goodsList'
 
 export default {
   name: "home",

@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import DetailGoodsList from 'components/content/goods/goodsList'
+import DetailGoodsList from 'components/content/goodsList/goodsList'
 export default {
   name: "shopcart_recommend",
   props:{
